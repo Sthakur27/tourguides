@@ -1,0 +1,31 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% extends "base.html" %}
+
+
+
+
+
+{% block page_content %}
+
+<div class="page-header">
+    <h4>Please login to the DSCB Tracker</h4>
+</div>
+
+<body>
+
+Note: please do not re-use any critical passwords on this site!
+
+
+
+
+{{ wtf.quick_form(form, action='', form_type='horizontal') }}
+
+
+
+
+
+</body>
+
+{% endblock %}
+

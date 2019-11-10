@@ -1,0 +1,107 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}DSCB Tracker{% endblock %}
+
+{% block navbar %}
+
+<!-- change navbar style for each project
+http://v4-alpha.getbootstrap.com/components/navbar/#color-schemes
+-->
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+</script>
+<!--script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+tablesorter not working, sadly
+<script src="{{url_for('static', filename='jquery.tablesorter.js')}}"></script-->
+
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip({
+    trigger: "hover"
+})
+})
+</script>
+
+<script src="{{url_for('static', filename='sorttable.js')}}"></script>
+<head>
+<title>DSCB Tracker</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='mystyle.css')}}"/>
+</head>
+
+
+
+
+<body>
+<style>
+  div {
+    padding-left: 0%;
+    padding-right: 0%;
+  }
+</style>
+<div style="padding-left: 2%; padding-right: 2%">
+
+
+ <!-- Static navbar -->
+      <nav class="navbar navbar-default" style="font-size: 125%">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">DSCB Tracker</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li><a href="/all">All</a></li>
+              <li><a href="/meeting">Meeting</a></li>
+	      <li><a href="/divisioninfo/all">Divisions</a></li>
+	      <li><a href="/users">Users</a></li>
+              <li><a href="/spotfire">Spotfire</a></li>
+	      <li><a href="/projectcodes/all">Project Codes</a></li>
+              <!--li><a href="#">Contact</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li-->
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+		<li><a href="/admin">Admin</a></li>
+                {% if current_user.is_authenticated %}
+                  <li> <a href="/"> {{ current_user.email }} </a></li>
+                  <li><a href="/logout">Logout</a></li>
+                {% else %}
+                  <li><a href="/login">Login </a></li>
+                {% endif %}
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+{% endblock %}
+
+{% block content %}
+    {% for message in get_flashed_messages(with_categories=true) %}
+    <div class="alert {{message[0]}}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message[1] }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+</body>

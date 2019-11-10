@@ -1,0 +1,29 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% extends "base.html" %}
+
+
+
+
+
+{% block page_content %}
+
+<div class="page-header">
+    <h3>{{header}}</h3>
+</div>
+
+<body>
+
+
+
+
+{{ wtf.quick_form(form, action=action, form_type='horizontal', horizontal_columns=('lg', 2, 6)) }}
+
+
+
+
+
+</body>
+
+{% endblock %}
+
