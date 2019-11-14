@@ -16,8 +16,7 @@ from flask_mail import Message
 
 @login_manager.user_loader
 def load_user(user_id):
-    u = User.query.filter_by(email=user_id).first()
-    return u
+    return User.query.get(int(user_id))
 
 @app.route('/logout', methods=['GET','POST'])
 def logout():
@@ -42,11 +41,13 @@ def login():
         # user should be an instance of your `User` class
         email = request.form['email']
         password = request.form['password']
-        user = load_user(email)
+        user = User.query.filter_by(email=email).first()
         #check if user exists and password matches
         if user and password == user.password:
+            print(user.id)
+            user = load_user(user.id)
+            print(login_user(user))
             flash('Logged in successfully.', 'bg-success')
-            login_user(user)
             return redirect_dest()
         else:
             flash('Wrong login', 'bg-danger')
@@ -67,7 +68,7 @@ def usersignup():
         for field in form.errors:
             for error in form.errors[field]:
                 flash('{}:{}'.format(field, error), 'bg-danger')
-        return render_template('form.html', action='/usersignup', form=form)
+        return render_template('login.html', action='/usersignup', form=form)
 
 @app.route("/tourguidesignup", methods=["GET", "POST"])
 def tourguidesignup():
@@ -76,15 +77,20 @@ def tourguidesignup():
         user = User()
         form.populate_obj(user)
         db.session.add(user)
+        user.isGuide = 1
+        db.session.flush()
+        affiliate_data = form.locations.data + form.times.data + form.activities.data
+        for ad in affiliate_data:
+            print(ad)
+            o = Option(user.id,ad)
+            db.session.add(o)
         db.session.commit()
         flash('User successfully added', 'bg-success')
         return redirect(url_for('home'))
     else:
-        '''
         for field in form.errors:
             for error in form.errors[field]:
                 flash('{}:{}'.format(field, error), 'bg-danger')
-        '''
         return render_template('form.html', action='/tourguidesignup', form=form)
 
 @app.route('/',methods=['GET','POST'])
@@ -96,33 +102,31 @@ def home():
 def search():
     form = SearchForm(request.form)
     if request.method=='POST':
-         try:
-             #get the pool specified
-             pool=Pool.query.filter_by(name=request.form['pool']).first()
-             #get the users matching the username and password
-             users=User.query.filter_by(username=request.form['username']).filter_by(password=request.form['password']).all()
-             #check if any of those users are in the pool's userinfo
-             user=None
-             pool_users=pool.userinfo.split(' ')
-             for u in users:
-                  if(str(u.id) in pool_users):
-                        user=u
-             if(user):
-                 #login the user and send to /poolinfo page
-                 if(str(user.id) in pool.userinfo.split(' ')):
-                      session['currentuser']=user.id
-                      session['logged_in']=True
-                      return redirect("/poolinfo/"+str(pool.id))
-                 #even though error, I chose to use bg-success color(green) because it contrasts with the website background color(red)
-                 flash("User not in Group",'bg-success') 
-             else:
-                 flash("User not Found",'bg-success')
-             return redirect('/login')
-         except:
-             flash("Login Error",'bg-success')
-             return redirect('/login')
-         return redirect("/login")
-    return render_template('search.html')
+        users = User.query.filter_by(isGuide=1).all()
+        loc = form.location.data
+        time = form.time.data
+        activity = form.activity.data
+        #print(users)
+        for i in range(len(users)-1,-1,-1):
+            flag = False
+            if(loc != 'None' and not flag):
+                option = Option.query.filter_by(guide_id = users[i].id).filter_by(detail = loc).first()
+                if not option:
+                    flag = True
+            if(time != 'None' and not flag):
+                option = Option.query.filter_by(guide_id = users[i].id).filter_by(detail = time).first()
+                if not option:
+                    flag = True
+            if(activity != 'None' and not flag):
+                option = Option.query.filter_by(guide_id = users[i].id).filter_by(detail = activity).first()
+                if not option:
+                    flag = True
+            if flag:
+                del(users[i])
+        #print(users)
+        return render_template('form.html', action='/search', form=form)      
+    else:
+        return render_template('form.html', action='/search', form=form)
 
 
         

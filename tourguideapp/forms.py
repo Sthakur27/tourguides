@@ -17,15 +17,20 @@ locations = ['Thailand','New York']
 times = ['lunch','evening']
 activities = ['art','nature','shopping']
 
+search_locations = [(None,'Any')] + [(x,x) for x in locations]
+search_times = [(None,'Any')] + [(x,x) for x in times]
+search_activities = [(None,'Any')] + [(x,x) for x in activities]
+
 class SearchForm(FlaskForm):
-    locations = SelectMultipleField('Location(s)',choices=[(x,x) for x in locations])
-    times = SelectMultipleField('Time(s)',choices=[(x,x) for x in times])
-    activities = SelectMultipleField('Activities(s)',choices=[(x,x) for x in activities])
+    location = SelectField('Location)',choices=search_locations)
+    time = SelectField('Time',choices=search_times)
+    activity = SelectField('Activity',choices=search_activities)
     submit = SubmitField("Search")
 
 class TourGuideForm(FlaskForm):
+    name = StringField("Name")
     email=StringField("Email:  example@gmail.com")
-    password= StringField("Password")
+    password = PasswordField('Password')
     locations = SelectMultipleField('Location(s)',choices=[(x,x) for x in locations])
     times = SelectMultipleField('Time(s)',choices=[(x,x) for x in times])
     activities = SelectMultipleField('Activities(s)',choices=[(x,x) for x in activities])
@@ -37,8 +42,9 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
     
 class UserForm(FlaskForm):
+    name = StringField("Name")
     email=StringField("Email:  example@gmail.com")
-    password= StringField("Password")
+    password = PasswordField('Password')
     submit = SubmitField('Add User')
     
 class EditUserForm(UserForm):
