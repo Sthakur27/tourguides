@@ -1,0 +1,48 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% extends "base.html" %}
+
+
+
+
+
+{% block page_content %}
+
+<div class="page-header">
+    <h4>Search Results</h4>
+</div>
+
+<body>
+
+
+<table id="grid" style="font-size: 125%;" class="table table-bordered table-hover table-sm sortable">
+<thead>
+  <tr>
+    <th>Tour Guide</th>
+    <th>Contact</th>
+  </tr>
+
+</thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>
+                    <!--<a href = "/divisioninfo/{{user.id}}">{{user.name}}</a>-->
+                    {{user.name}}
+                </td>
+                <td>
+                    <a href="mailto:{{user.email}}?">{{user.email}}</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+
+</body>
+
+{% endblock %}
+

@@ -106,7 +106,7 @@ def search():
         loc = form.location.data
         time = form.time.data
         activity = form.activity.data
-        #print(users)
+        print(users)
         for i in range(len(users)-1,-1,-1):
             flag = False
             if(loc != 'None' and not flag):
@@ -123,8 +123,9 @@ def search():
                     flag = True
             if flag:
                 del(users[i])
-        #print(users)
-        return render_template('form.html', action='/search', form=form)      
+        print(users)
+        #return render_template('form.html', action='/search', form=form)      
+        return render_template('searchresults.html',users=users)
     else:
         return render_template('form.html', action='/search', form=form)
 
