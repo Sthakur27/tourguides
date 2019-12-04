@@ -127,7 +127,8 @@ def search():
         #return render_template('form.html', action='/search', form=form)      
         return render_template('searchresults.html',users=users)
     else:
-        return render_template('form.html', action='/search', form=form)
+        header = "Search for Tour Guides"
+        return render_template('form.html', action='/search',header = header, form=form)
 
 
         
